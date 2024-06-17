@@ -4,6 +4,7 @@ using Catalog.Auth.Model;
 using Catalog.Auth.Services;
 using Catalog.Auth.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Catalog.Auth.Controllers
 {
@@ -26,7 +27,8 @@ namespace Catalog.Auth.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var login = await _auth.Authenticate(model.Email, model.Password);
+            string aplicacion = GetApplicationByHeaders();
+            var login = await _auth.Authenticate(aplicacion, model.Email, model.Password);
             if (login is null)
             {
                 return BadRequest(new
@@ -41,6 +43,17 @@ namespace Catalog.Auth.Controllers
                 Succeeded = true,
                 Message = "User logged in successfully"
             });
+        }
+
+        private string? GetApplicationByHeaders()
+        {
+            var headers = HttpContext.Request.Headers;
+            if (headers.ContainsKey("ApiKey"))
+            {
+                var json = JsonSerializer.Deserialize<ApiKeyModel>(headers["ApiKey"]);
+                return json?.Application;
+            }
+            return string.Empty;
         }
 
         [HttpPost]

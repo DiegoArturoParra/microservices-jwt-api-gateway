@@ -1,3 +1,4 @@
+using Catalog.Gateway.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
@@ -5,13 +6,11 @@ using Ocelot.Middleware;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 var Secret = builder.Configuration["jwt:secret"];
 var key = Encoding.ASCII.GetBytes(Secret);
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    x.TokenValidationParameters = new TokenValidationParameters
+    options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -24,13 +23,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Services.AddOcelot(builder.Configuration);
-
+builder.Services.AddOcelot(builder.Configuration).AddDelegatingHandler<ApiKeyHandler>(true);
 
 var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseOcelot();
+app.UseOcelot().Wait();
 app.MapGet("/", () => "Hello World!");
 
 app.Run();

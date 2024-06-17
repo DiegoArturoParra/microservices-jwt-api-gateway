@@ -6,7 +6,7 @@ namespace Catalog.Auth.Services
 {
     public interface IAuth
     {
-        Task<string> Authenticate(string email, string password, bool hashPassword = true);
+        Task<string> Authenticate(string application, string email, string password, bool hashPassword = true);
         int? getUserFromToken(string token);
 
         string? getRoleFromToken(string token);
@@ -25,12 +25,12 @@ namespace Catalog.Auth.Services
             _configuration = configuration;
             this.auth.SecretKey = _configuration["jwt:secret"];
         }
-        public async Task<string> Authenticate(string username, string password, bool hashPassword = true)
+        public async Task<string> Authenticate(string application, string username, string password, bool hashPassword = true)
         {
             var hashPwd = hashPassword == true ? password.Hash() : password;
             var user = await _uow.Repository<User>().GetAsync(u => u.Email.ToLower() == username.ToLower() && u.Password == hashPwd);
             if (user is null) return null;
-            var perform_auth = Authenticate(user.Id, user.Role);
+            var perform_auth = Authenticate(user.Id, user.Role, application);
             return perform_auth;
         }
         public int? getUserFromToken(string token)
@@ -57,17 +57,22 @@ namespace Catalog.Auth.Services
             }
             return null;
         }
-        string Authenticate(int userId, string role)
+        string Authenticate(int userId, string role, string application)
         {
             var claims = new ClaimsIdentity(new Claim[]
+              {
+                    new Claim(ClaimTypes.Name, userId.ToString())
+              });
+
+            if (application.Equals("MVC_GDM"))
             {
-                    new Claim(ClaimTypes.Name, userId.ToString()),
-                    new Claim(ClaimTypes.Role, role),
-            });
+                claims.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+
             var result = auth.CreateToken(claims, _configuration["jwt:issuer"], _configuration["jwt:audience"], 45);
             return result;
         }
 
-       
+
     }
 }

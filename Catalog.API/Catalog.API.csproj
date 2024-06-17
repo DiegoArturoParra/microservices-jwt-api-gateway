@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>d8f98384-962b-49cc-a52a-1a2119c662e4</UserSecretsId>
@@ -9,23 +9,38 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.28" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.28" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.28" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.28">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <Compile Remove="DomainEvents\**" />
+    <Compile Remove="Extensions\**" />
+    <Compile Remove="Factories\**" />
+    <Compile Remove="IntegrationEvents\**" />
+    <Compile Remove="Services\**" />
+    <Content Remove="DomainEvents\**" />
+    <Content Remove="Extensions\**" />
+    <Content Remove="Factories\**" />
+    <Content Remove="IntegrationEvents\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="DomainEvents\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+    <EmbeddedResource Remove="Factories\**" />
+    <EmbeddedResource Remove="IntegrationEvents\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="DomainEvents\**" />
+    <None Remove="Extensions\**" />
+    <None Remove="Factories\**" />
+    <None Remove="IntegrationEvents\**" />
+    <None Remove="Services\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DomainEvents\" />
-    <Folder Include="IntegrationEvents\" />
-    <Folder Include="Factories\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>

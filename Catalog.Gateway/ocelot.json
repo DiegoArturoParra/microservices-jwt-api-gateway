@@ -1,6 +1,9 @@
 {
   "GlobalConfiguration": {
   },
+  "DelegatingHandlers": [
+    "ApiKeyHandler"
+  ],
   "Routes": [
     {
       "UpstreamPathTemplate": "/gateway/products/{everything}",
@@ -19,17 +22,48 @@
       ]
     },
     {
-      "UpstreamPathTemplate": "/gateway/account/{everything}",
+      "UpstreamPathTemplate": "/gateway/customers/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
-      "DownstreamPathTemplate": "/api/v1/auth/{everything}",
-      "DownstreamScheme": "https",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamPathTemplate": "/api/v1/customers/{everything}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7074
+          "Port": 49220
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/admin/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamPathTemplate": "/api/v1/admin/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 49220
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/account/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ],
+      "DownstreamPathTemplate": "/api/v1/auth/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5074
         }
       ]
     }
-
   ]
 }
